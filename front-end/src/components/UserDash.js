@@ -155,7 +155,7 @@ export const UserDash = () => {
     history.push(`/editPost/${postId}`)
     }
     return (
-        <div>
+        <div>   
             <Flex>
             <Form >
                 <Label>Title:</Label>
