@@ -3,7 +3,7 @@ import { Router, Route, Switch, Link } from "react-router-dom";
 import "../components/Styles.less";
 import axios from "axios";
 import * as Yup from "yup";
-import Register from "../components/Register";
+import LoginForm from "../components/LoginForm";
 
 const url = "https://post-here-2.herokuapp.com";
 
@@ -37,43 +37,33 @@ const formSchema = Yup.object().shape({
 
   terms: Yup.boolean().oneOf([true], "You must accept Terms and Conditions"),
 });
-
-export default function LoginForm(props) {
+export default function Register(props) {
   //Sets state prop for `users`
-  const [users, setUsers] = useState([]);
-  const [postUser, setPostUser] = useState([]);
+  const [postUsers, setPostUser] = useState([]);
   const [formValues, setFormValues] = useState(initialFormValues);
-  const { errors, values } = props;
+
   //state will kepp track of whether submit button is disabled!
-  const [disabled, setDisabled] = useState(true);
+  const [buttonDisabled, setButtonDisabled] = useState(true);
 
   //will allow state to keep track of validation errors
   const [formErrors, setFormErrors] = useState(initialFormErrors);
+  const [disabled, setDisabled] = useState(true);
 
-  const getUsers = () => {
-    // Fetches user from the api and sets them in state
-
+  const postUser = (user) => {
     axios
-      .get(url)
+      .post("https://post-here-2.herokuapp.com/users")
       .then((res) => {
-        setUsers(res.data);
+        setPostUser([res.data, ...postUser]);
       })
-      .catch((err) => {
-        console.log(users);
-      });
+      .catch((err) => {});
   };
-
-  useEffect(() => {
-    // getting users from APi!
-    getUsers();
-  }, []);
 
   // const [post, setPost] = useState([]);
   useEffect(() => {
     // runs validation and use them to enable/disable the submit button
     formSchema.isValid(formValues).then((valid) => {
       // either true or false
-      setDisabled(!valid);
+      setButtonDisabled(!valid);
     });
   }, [formValues]);
 
@@ -86,7 +76,7 @@ export default function LoginForm(props) {
       email: formValues.email,
     };
 
-    setPostUser(newUser);
+    postUser(newUser);
     setFormValues(initialFormValues);
   };
 
@@ -118,26 +108,31 @@ export default function LoginForm(props) {
   };
 
   return (
-    <form className="Forms" onSubmit={onSubmit}>
-      <header></header>
+    <form className="Form" onSubmit={onSubmit}>
+      <Link to="/LoginForm" className="RegLink">
+        Sign in
+      </Link>
 
-      <div className="Login_Container">
-        <h2>Login</h2>
+      <h3>Become a member</h3>
+      <div>
+        <small>Create your account</small>
+      </div>
 
+      <div className="FormContainer">
         <div className="FormField">
-          <label className="FormLabel" htmlFor="username"></label>
+          <label className=" FormLabel" htmlFor="name"></label>
           <input
             type="text"
-            id="username"
-            className="FormInput"
-            placeholder="Username"
-            name="username"
+            id="name"
+            className="formInput"
+            placeholder="username"
+            name="name"
             onChange={onInputChange}
           />
         </div>
 
         <div className="FormField">
-          <label className="FormLabel" htmlFor="email"></label>
+          <label className="FormLabel" htmlFor="name"></label>
           <input
             type="text"
             id="email"
@@ -149,27 +144,28 @@ export default function LoginForm(props) {
         </div>
 
         <div className="FormField">
-          <label className="FormLabel" htmlFor="password"></label>
+          <label className="FormLabel" htmlFor="name"></label>
           <input
-            values="password"
             type="text"
             id="password"
             className="FormInput"
             placeholder="Password"
-            name="password"
+            name="passoword"
             onChange={onInputChange}
           />
-
-          <div className="btn">
-            <button onClick={onSubmit} disabled={disabled}>
-              Continue
-            </button>
-          </div>
         </div>
-      </div>
 
-      <div>
-        <Link to="./Register">SignUp</Link>
+        <div className="btn">
+          <button onClick={onSubmit} disabled={disabled}>
+            Continue
+          </button>
+        </div>
+
+        <div className="terms">
+          <small>
+            By clicking submit, you agree to <Link>Terms of Use.</Link>
+          </small>
+        </div>
       </div>
     </form>
   );
