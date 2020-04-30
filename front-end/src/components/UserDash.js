@@ -4,9 +4,10 @@ import styled from 'styled-components'
 import {useHistory} from 'react-router-dom'
 import EditPost from './EditPost'
 import Popup from 'reactjs-popup'
+import axios from 'axios'
 
 // styled components
-const Body = styled.input `
+const Body = styled.textarea `
 width: 55%;
 height: 10vh;
 border-radius: 5px;
@@ -64,6 +65,10 @@ color: #ff5400ff;
 const Label = styled.label `
 color: #ff5400ff;
 `
+const SuggestionCard = styled.div `
+color: #737373ff;
+
+`
 
 //initial state
 const initialState = {
@@ -99,16 +104,40 @@ export const UserDash = () => {
             .catch(err => {
                 console.log('uh-oh! Spaghetti-o', err)
             })
+    }   
+    const formSubmit = (e) => {
+        e.preventDefault()
+        saveAnalyzed(e)
+        analyze(e)
+        
     }
-    const formSubmit = e => {
+    const analyze = e => {
         e.preventDefault()
         axiosWithAuth()
         .post('https://post-here2.herokuapp.com/predict', updatePost)
-        .then(res => {
+        .then(res => { 
             console.log(res.data.prediction)
             setSuggestion(res.data.prediction)
         })
-
+        .catch(err => {
+            console.log({err})
+        })
+    }
+    const saveAnalyzed = e => {
+        const userId = localStorage.getItem('userId')
+        e.preventDefault()
+        const saveData = {
+            post_title: updatePost.title,
+            post_text: updatePost.body
+        }
+        axiosWithAuth()
+        .post(`/users/${userId}/posts`, saveData)
+        .then(res => {
+            getPosts()
+        })
+        .catch(err => {
+        console.log({err})
+        })
     }
 
     const deleteButton = (e, postId) => {
@@ -142,21 +171,24 @@ export const UserDash = () => {
                 <Label>Body:</Label>
                 <Body
                     name='body'
-                    type='textarea'
+                    type='text'
                     placeholder='Body'
                     value={updatePost.body}
                     onChange={handleChange}
                 />
                 <br/>
                 <Analyze onClick={formSubmit}>Analyze</Analyze>
+                {/* <button>Save Post</button> */}
             </Form>
 
-            
+            <SuggestionCard>
                 <Heading>Where to Post</Heading>
-                <p>{suggestion}</p>
+                <br/>
+                <p>r/{suggestion}</p>
+            </SuggestionCard>
             </Flex>
             <SavedTopicsContainer>
-                <Heading>Saved Topics</Heading>
+                <Heading>User Posts</Heading>
                 {saved && saved.map(save => {
                     return (
                         <TopicCard>
