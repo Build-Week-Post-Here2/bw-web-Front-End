@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from "react";
-import { Router, Route, Switch, Link } from "react-router-dom";
-import "../components/Styles.less";
-import axios from "axios";
-import * as Yup from "yup";
-import Register from "../components/Register";
+import React, { useState} from "react";
+import { Link } from "react-router-dom";
 
-const url = "https://post-here-2.herokuapp.com";
+
+import * as Yup from "yup";
+
+
 
 const initialFormValues = {
   //text inputs
@@ -35,60 +34,23 @@ const formSchema = Yup.object().shape({
     .min(6, "Passwords must be at least 6 characters long.")
     .required("Password is Required"),
 
-  terms: Yup.boolean().oneOf([true], "You must accept Terms and Conditions"),
+ 
 });
 
-export default function LoginForm(props) {
+export default function Login(props) {
+const {onSubmit} = props
   //Sets state prop for `users`
   const [users, setUsers] = useState([]);
-  const [postUser, setPostUser] = useState([]);
+
   const [formValues, setFormValues] = useState(initialFormValues);
-  const { errors, values } = props;
+  const { errors, disabled, values } = props;
   //state will kepp track of whether submit button is disabled!
-  const [disabled, setDisabled] = useState(true);
+  const [buttonDisabled, setButtonDisabled] = useState(true);
 
   //will allow state to keep track of validation errors
   const [formErrors, setFormErrors] = useState(initialFormErrors);
 
-  const getUsers = () => {
-    // Fetches user from the api and sets them in state
-
-    axios
-      .get(url)
-      .then((res) => {
-        setUsers(res.data);
-      })
-      .catch((err) => {
-        console.log(users);
-      });
-  };
-
-  useEffect(() => {
-    // getting users from APi!
-    getUsers();
-  }, []);
-
-  // const [post, setPost] = useState([]);
-  useEffect(() => {
-    // runs validation and use them to enable/disable the submit button
-    formSchema.isValid(formValues).then((valid) => {
-      // either true or false
-      setDisabled(!valid);
-    });
-  }, [formValues]);
-
-  const onSubmit = (evt) => {
-    evt.preventDefault();
-
-    const newUser = {
-      username: formValues.username,
-      password: formValues.password,
-      email: formValues.email,
-    };
-
-    setPostUser(newUser);
-    setFormValues(initialFormValues);
-  };
+  
 
   const onInputChange = (evt) => {
     const name = evt.target.name;
@@ -119,12 +81,13 @@ export default function LoginForm(props) {
 
   return (
     <form className="Forms" onSubmit={onSubmit}>
-      <header></header>
+      <header>
+      <Link to="./Register">SignUp</Link>
+      </header><h2>Login</h2>  
 
-      <div className="Login_Container">
-        <h2>Login</h2>
+     
+      
 
-        <div className="FormField">
           <label className="FormLabel" htmlFor="username"></label>
           <input
             type="text"
@@ -134,9 +97,8 @@ export default function LoginForm(props) {
             name="username"
             onChange={onInputChange}
           />
-        </div>
+   
 
-        <div className="FormField">
           <label className="FormLabel" htmlFor="email"></label>
           <input
             type="text"
@@ -146,9 +108,9 @@ export default function LoginForm(props) {
             name="email"
             onChange={onInputChange}
           />
-        </div>
+ 
 
-        <div className="FormField">
+
           <label className="FormLabel" htmlFor="password"></label>
           <input
             values="password"
@@ -159,18 +121,14 @@ export default function LoginForm(props) {
             name="password"
             onChange={onInputChange}
           />
+ <div className="FormFarm">
+          <button  onClick={onSubmit} disabled={disabled}>
+            Continue</button>
+   </div>
+  
 
-          <div className="btn">
-            <button onClick={onSubmit} disabled={disabled}>
-              Continue
-            </button>
-          </div>
-        </div>
-      </div>
+      
 
-      <div>
-        <Link to="./Register">SignUp</Link>
-      </div>
     </form>
   );
 }

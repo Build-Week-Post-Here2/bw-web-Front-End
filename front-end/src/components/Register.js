@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Router, Route, Switch, Link } from "react-router-dom";
-import "../components/Styles.less";
+import { Link } from "react-router-dom";
+import "./Styles.less";
 import axios from "axios";
-import * as Yup from "yup";
-import LoginForm from "../components/LoginForm";
+import * as yup from 'yup'
 
-const url = "https://post-here-2.herokuapp.com";
+
+const url ="https://post-here-subreddit.herokuapp.com/api/auth/register";
 
 const initialFormValues = {
   //text inputs
@@ -22,24 +22,27 @@ const initialFormErrors = {
 };
 
 //Schema for validation
-const formSchema = Yup.object().shape({
-  username: Yup.string()
+const formSchema = yup.object().shape({
+  username: yup.string()
     .min(3, "Must be more than 3 characters")
     .required("Must include email address."),
 
-  email: Yup.string()
+  email: yup.string()
     .email("Invalid email address.")
     .required("Must include email address."),
 
-  password: Yup.string()
+  password: yup.string()
     .min(6, "Passwords must be at least 6 characters long.")
     .required("Password is Required"),
 
-  terms: Yup.boolean().oneOf([true], "You must accept Terms and Conditions"),
+  
 });
+
 export default function Register(props) {
+  
+  const {handleSubmit} = props
   //Sets state prop for `users`
-  const [postUsers, setPostUser] = useState([]);
+const [user, setUsers] = useState([]);
   const [formValues, setFormValues] = useState(initialFormValues);
 
   //state will kepp track of whether submit button is disabled!
@@ -47,27 +50,31 @@ export default function Register(props) {
 
   //will allow state to keep track of validation errors
   const [formErrors, setFormErrors] = useState(initialFormErrors);
-  const [disabled, setDisabled] = useState(true);
+  const [FormDisabled, setFormDisabled] = useState(true);
 
-  const postUser = (user) => {
+  const postUser = user => {
     axios
-      .post("https://post-here-2.herokuapp.com/users")
-      .then((res) => {
-        setPostUser([res.data, ...postUser]);
+      .post(url, ...user)
+      .then(res => {
+        setUsers([res.data, ...user])
       })
-      .catch((err) => {});
-  };
+      .catch(err => {
+      })
+  }
+
+
 
   // const [post, setPost] = useState([]);
   useEffect(() => {
     // runs validation and use them to enable/disable the submit button
-    formSchema.isValid(formValues).then((valid) => {
+    formSchema.isValid(formValues)
+    .then(valid => {
       // either true or false
-      setButtonDisabled(!valid);
-    });
-  }, [formValues]);
+      setFormDisabled(!valid)
+    })
+  }, [formValues])
 
-  const onSubmit = (evt) => {
+  const onSubmit = evt => {
     evt.preventDefault();
 
     const newUser = {
@@ -81,45 +88,50 @@ export default function Register(props) {
   };
 
   const onInputChange = (evt) => {
-    const name = evt.target.name;
+    const name = evt.target.username;
     const value = evt.target.value;
 
-    Yup.reach(formSchema, name)
+
+    yup
+    .reach(formSchema, name)
       .validate(value)
-      .then((valid) => {
+      .then(valid => {
         // clears errors
         setFormErrors({
           ...formErrors,
-          [name]: "",
-        });
+          [name]: '',
+        })
       })
       .catch((err) => {
         // sets form errors
         setFormErrors({
           ...formErrors,
-          [name]: err.errors[0],
-        });
-      });
+          [name]: err.errors[0]
+        })
+      })
 
     setFormValues({
       ...formValues,
       [name]: value,
-    });
-  };
+    })
+  }
 
   return (
-    <form className="Form" onSubmit={onSubmit}>
-      <Link to="/LoginForm" className="RegLink">
+    <form className="Form" onSubmit={handleSubmit}>
+    <header>
+      <Link to="/Login" >
         Sign in
       </Link>
+    </header>
+
+      
 
       <h3>Become a member</h3>
-      <div>
+   
         <small>Create your account</small>
-      </div>
+ 
 
-      <div className="FormContainer">
-        <div className="FormField">
+ 
           <label className=" FormLabel" htmlFor="name"></label>
           <input
             type="text"
@@ -127,11 +139,12 @@ export default function Register(props) {
             className="formInput"
             placeholder="username"
             name="name"
+            
             onChange={onInputChange}
           />
-        </div>
+  
 
-        <div className="FormField">
+
           <label className="FormLabel" htmlFor="name"></label>
           <input
             type="text"
@@ -139,11 +152,10 @@ export default function Register(props) {
             className="FormInput"
             placeholder="Email"
             name="email"
+         
             onChange={onInputChange}
           />
-        </div>
-
-        <div className="FormField">
+    
           <label className="FormLabel" htmlFor="name"></label>
           <input
             type="text"
@@ -151,22 +163,22 @@ export default function Register(props) {
             className="FormInput"
             placeholder="Password"
             name="passoword"
+         
             onChange={onInputChange}
           />
-        </div>
+   
 
-        <div className="btn">
-          <button onClick={onSubmit} disabled={disabled}>
+     
+            <button  onClick={onSubmit} disabled={FormDisabled}>
             Continue
           </button>
-        </div>
+     
 
-        <div className="terms">
-          <small>
-            By clicking submit, you agree to <Link>Terms of Use.</Link>
-          </small>
-        </div>
-      </div>
+          <div className= "terms">
+            By clicking submit, you agree to <Link to="/">Terms of Use.</Link>
+          </div>
+  
+
     </form>
   );
 }
