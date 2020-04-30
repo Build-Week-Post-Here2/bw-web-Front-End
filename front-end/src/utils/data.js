@@ -1,0 +1,23 @@
+
+export const data = [
+    {
+        title: 'TIFU Sleeping over at my girlfriends. Now I’m in a closet hiding',
+        body: 'Well I went to stay the night at my girlfriends because recently I moved out of my home and have been sleeping on a couch for the last week, so I thought sleeping in a bed with my girlfriend would be really nice for a change. On top of all this, her mom wasn’t home. Everything went smooth, I fell asleep like a rock and the morning went pretty smooth in the beginning. Then the home door opens and it’s her mom... Keep in mind I’m not supposed to be here and no one is allowed over. So I made a run for the closet and as I’m writing this, this is where I currently am. As a 6’4 guy this closet is very small and my heads literally touching the top of it. TLDR: I thought with my dick, had a good sleep and now have to hide in a closet because of it. Update 1: HER MOM CAME IN AND WAS OUTSIDE THE DOOR TALKING ABOUT PUMA PANTS THAT WERE ON SALE, EVERY BREATHE I TOOK FELT LOUDER AND LOUDER. My girlfriend quickly came up with a good bullshit excuse and she is now with her downstairs talking about clothes phew. Update 2: Phone died..... Texted my girlfriend right before it did So my girlfriend charged it up for me. I’d like to tell you guys something new and exciting has happened in the hours it’s been but I’ve done nothing but twiddle my thumbs. The mom should be leaving soon and if everything goes to plan I’ll be out in an hour'
+    }, 
+    {
+        title: 'Ladies, guys like to be asked questions too...',
+        body:'Nothing turns me off more when first getting to know somebody if I’m the only one asking “How are you?”, “What did you do today?”, or just questions after I talk about a topic I bring up in general. Otherwise it just feels like you’re not even interested in return, or just into yourself.'
+    },
+    {
+        title: 'How do people share a dorm room and NOT go insane?',
+        body: 'Im not American, so maybe this is just an American thing, but Im really sure I would not be able to live like that for a long time. I get the whole "make friends and live with someone thing", but I need my own space where I can just be completely alone in my room. Share a flat? Absolutely. Share a single room? Hell no. Ive been in situations where I shared a room for a week or two and that is manageable, but I feel like anything longer than a few weeks and I would suffocate. Im fairly outgoing, good with people, but I just need a certain amount of time a day that I spend completely alone on my room with no social interaction whatsoever. Without that, I wouldnt be happy. So how do people manage? Do you just accept not having actual, private alone time or do you somehow get that elsewhere? If you come back to your room and theres a sock on the door, do you just sleep on a park bench? How does all of that work? edit: Thanks for the unbelievable amount of stories and tips! I was scheduled to study abroad in the US starting in September, with Covid-19 thats up in the air now, but I still have a much better idea of living on campus etc. now!'
+    }, 
+    {
+        title: 'CMV: Any person the age of 25 or older should not be denied a tubual ligation or vasectomy if they request one.',
+        body: 'Its a common occurrence for men and women seeking a vasectomy or tubual ligation to have their request denied, even if they are in their late twenties or early to mid 30s. My view is that whether they already have children or not, no person should be denied a sterilization procedure if they are aged 25 or older. The reason I say 25, is because that is the age that your frontal lobe is fully formed. And becuase of that you are able to make rational decisions. By the age of 25+, you have a third of your life behind you. You have been an adult for nearly a decade, and have had plenty of time to think about what you want or dont want in life, including if you do or dont want children. Therefore a person in their mid to late twenties is very sure of their decisions, even if its a decision to have a permanent sterilization procedure.'
+    },
+    {
+        title: 'Proposals should be done in a special and private place, proposing in public is just plain obnoxious and puts pressure on the other party to accept.',
+        body: 'People should stop proposing on public, the pressure and stress experienced by people who were proposed to in public makes some people just say yes because they dont want to embarrass the other party.'
+    }
+]
