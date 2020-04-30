@@ -1,7 +1,9 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { axiosWithAuth } from '../utils/axiosWithAuth'
 import styled from 'styled-components'
-import {data} from '../utils/data'
+import {useHistory} from 'react-router-dom'
+import EditPost from './EditPost'
+import Popup from 'reactjs-popup'
 
 // styled components
 const Body = styled.input `
@@ -70,9 +72,10 @@ const initialState = {
 }
 
 export const UserDash = () => {
-    const [saved, setSaved] = useState(data)
+    const [saved, setSaved] = useState()
     const [suggestion, setSuggestion] = useState()
     const [updatePost, setUpdatePost] = useState(initialState)
+    const history = useHistory()
 
 
     const handleChange = e => {
@@ -82,38 +85,46 @@ export const UserDash = () => {
             [e.target.name]: e.target.value
         })
     }
+    useEffect(() => {
+        getPosts()
+    }, [])
     const getPosts = () => {
+        const userId = localStorage.getItem('userId')
         axiosWithAuth()
-            .get('/users/15/posts')
+            .get(`/users/${userId}/posts`)
             .then(res => {
-                setSaved(res.results)
+                setSaved(res.data.results)
                
             })
             .catch(err => {
                 console.log('uh-oh! Spaghetti-o', err)
             })
     }
-    // const formSubmit = e => {
-    //     e.preventDefault()
-    //     axiosWithAuth()
-    //     .post(/users/15/posts)
-    //     .then(res => {
+    const formSubmit = e => {
+        e.preventDefault()
+        axiosWithAuth()
+        .post('https://post-here2.herokuapp.com/predict', updatePost)
+        .then(res => {
+            console.log(res.data.prediction)
+            setSuggestion(res.data.prediction)
+        })
 
-    //     })
+    }
 
-    // }
+    const deleteButton = (e, postId) => {
+        const userId = localStorage.getItem('userId')
+        e.preventDefault()
+        axiosWithAuth()
+        .delete(`/users/${userId}/posts/${postId}`)
+        .then(res => {
+            getPosts()
+        })
+        .catch(error => console.log(error))
+    }
 
-    // const deleteButton = e => {
-    //     e.preventDefault()
-    //     axiosWithAuth()
-    //     .delete('/users/15/posts/11')
-    // }
-
-    // const editButton = e => {
-    //     e.preventDefault()
-    //     axiosWithAuth()
-    //     .put('/users/15/posts/11', someText)
-    // }
+    const editButton = (e, postId) => {
+    history.push(`/editPost/${postId}`)
+    }
     return (
         <div>
             <Flex>
@@ -137,22 +148,23 @@ export const UserDash = () => {
                     onChange={handleChange}
                 />
                 <br/>
-                <Analyze>Analyze</Analyze>
+                <Analyze onClick={formSubmit}>Analyze</Analyze>
             </Form>
 
             
                 <Heading>Where to Post</Heading>
-                
+                <p>{suggestion}</p>
             </Flex>
             <SavedTopicsContainer>
                 <Heading>Saved Topics</Heading>
-                {saved.map(save => {
+                {saved && saved.map(save => {
                     return (
                         <TopicCard>
-                        <PostHeading>{save.title}</PostHeading>
-                        <p>{save.body}</p>
-                        <Button>Delete</Button>
-                        <Button>Edit</Button>
+                        <PostHeading>{save.post_title}</PostHeading>
+                        <p>{save.post_text}</p>
+                        <Button onClick={e => deleteButton(e, save.id)}>Delete</Button>
+                        <Button onClick={e => editButton(e, save.id)}>Edit</Button>
+                           
                         </TopicCard>
                     )
                 })}
