@@ -3,9 +3,9 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import * as yup from "yup";
 
-const url = "https://post-here-subreddit.herokuapp.com/api/auth/register";
+const url = "https://post-here-subreddit.herokuapp.com/api/auth/register"
 
-const initialFormValues = {
+const FormValues = {
   //text inputs
   username: "",
   email: "",
@@ -38,24 +38,37 @@ const formSchema = yup.object().shape({
 });
 
 export default function Register(props) {
-  //Sets state prop for `users`
-  const [users, setUsers] = useState([]);
-  const [formValues, setFormValues] = useState(initialFormValues);
+
+  const [formValues, setFormValues] = useState(FormValues);
 
   //will allow state to keep track of validation errors
   const [formErrors, setFormErrors] = useState(initialFormErrors);
   const [FormDisabled, setFormDisabled] = useState(true);
+  const [post, SetPost] = useState([]);
+
+  const sentData = { data: "Your data has been submitted" };
+
+  axios
+    .post(url, sentData)
+    .then((res) => {
+      console.log(res.data);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+
+  const [users] = useState([]);
 
   const postUser = (user) => {
     axios
       .post(url, user)
       .then((res) => {
-        setUsers([res.data, ...users]);
+        SetPost([...users, res.data]);
       })
-      .catch((err) => {});
+      .catch((err) => {
+        debugger;
+      });
   };
-
-  // const [post, setPost] = useState([]);
   useEffect(() => {
     // runs validation and use them to enable/disable the submit button
     formSchema.isValid(formValues).then((valid) => {
@@ -74,11 +87,11 @@ export default function Register(props) {
     };
 
     postUser(newUser);
-    setFormValues(initialFormValues);
+    setFormValues(FormValues);
   };
 
   const onInputChange = (evt) => {
-    const name = evt.target.username;
+    const name = evt.target.name;
     const value = evt.target.value;
 
     yup
@@ -104,32 +117,35 @@ export default function Register(props) {
       [name]: value,
     });
   };
-  const handleChange = (e) => {
-    e.preventDefault();
-  };
-
+  // console.log("error->", formErrors.username);
   return (
     <form className="Form" onSubmit={onSubmit}>
       <header>
         <Link to="/Login">Sign in</Link>
       </header>
-
+      <div className="errors">
+        {formErrors.username}
+        {formErrors.email}
+        {formErrors.password}
+      </div>
       <h3>Become a member</h3>
 
       <small>Create your account</small>
 
-      <label className=" FormLabel" htmlFor="name"></label>
+      <label className=" FormLabel" htmlFor="username"></label>
       <input
+        value={formValues.username}
         type="text"
-        id="name"
+        id="username"
         className="formInput"
         placeholder="username"
-        name="name"
+        name="username"
         onChange={onInputChange}
       />
 
-      <label className="FormLabel" htmlFor="name"></label>
+      <label className="FormLabel" htmlFor="email"></label>
       <input
+        value={formValues.email}
         type="text"
         id="email"
         className="FormInput"
@@ -138,23 +154,25 @@ export default function Register(props) {
         onChange={onInputChange}
       />
 
-      <label className="FormLabel" htmlFor="name"></label>
+      <label className="FormLabel" htmlFor="password"></label>
       <input
+        value={formValues.password}
         type="text"
         id="password"
         className="FormInput"
         placeholder="Password"
-        name="passoword"
+        name="password"
         onChange={onInputChange}
       />
 
-      <button onClick={onSubmit} onChange={handleChange}disabled={FormDisabled}>
+      <button onClick={onSubmit} onChange={onSubmit} disabled={FormDisabled}>
         Create Account
       </button>
 
       <div className="terms">
         By clicking submit, you agree to <Link to="/">Terms of Use.</Link>
       </div>
+      <pre>{JSON.stringify(post, null, 2)}</pre>
     </form>
   );
 }

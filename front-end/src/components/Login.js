@@ -1,12 +1,11 @@
-import React, { useState} from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
-
-
+import axios from "axios";
 import * as Yup from "yup";
 
+const url = "https://post-here-subreddit.herokuapp.com/api/auth/login";
 
-
-const initialFormValues = {
+const FormValues = {
   //text inputs
   username: "",
   email: "",
@@ -33,25 +32,26 @@ const formSchema = Yup.object().shape({
   password: Yup.string()
     .min(6, "Passwords must be at least 6 characters long.")
     .required("Password is Required"),
-
- 
 });
 
 export default function Login(props) {
-const {onSubmit, disabled,} = props
+  const { onSubmit, disabled } = props;
   //Sets state prop for `users`
-
-
-  const [formValues, setFormValues] = useState(initialFormValues);
-
-
- 
+  const { post } = useState([]);
+  const [formValues, setFormValues] = useState(FormValues);
 
   //will allow state to keep track of validation errors
   const [formErrors, setFormErrors] = useState(initialFormErrors);
 
-  
-
+  // axios
+  axios.get(url).then(
+    (response) => {
+      console.log(response.data);
+    },
+    (error) => {
+      console.log(error);
+    }
+  );
   const onInputChange = (evt) => {
     const name = evt.target.name;
     const value = evt.target.value;
@@ -82,53 +82,55 @@ const {onSubmit, disabled,} = props
   return (
     <form className="Forms" onSubmit={onSubmit}>
       <header>
-      <Link to="./Register">SignUp</Link>
-      </header><h2>Login</h2>  
+        <Link to="./Register">SignUp</Link>
+      </header>
 
-     
-      
+      <div className="errors">
+        {formErrors.username}
+        {formErrors.email}
+        {formErrors.password}
+      </div>
 
-          <label className="FormLabel" htmlFor="username"></label>
-          <input
-            type="text"
-            id="username"
-            className="FormInput"
-            placeholder="Username"
-            name="username"
-            onChange={onInputChange}
-          />
-   
+      <h2>Login</h2>
 
-          <label className="FormLabel" htmlFor="email"></label>
-          <input
-            type="text"
-            id="email"
-            className="FormInput"
-            placeholder="Email"
-            name="email"
-            onChange={onInputChange}
-          />
- 
+      <label className="FormLabel" htmlFor="username"></label>
+      <input
+        value={formValues.username}
+        type="text"
+        id="username"
+        className="formInput"
+        placeholder="username"
+        name="username"
+        onChange={onInputChange}
+      />
 
+      <label className="FormLabel" htmlFor="email"></label>
+      <input
+        value={formValues.email}
+        type="text"
+        id="email"
+        className="formInput"
+        placeholder="email"
+        name="email"
+        onChange={onInputChange}
+      />
 
-          <label className="FormLabel" htmlFor="password"></label>
-          <input
-            values="password"
-            type="text"
-            id="password"
-            className="FormInput"
-            placeholder="Password"
-            name="password"
-            onChange={onInputChange}
-          />
- <div className="FormFarm">
-          <button  onClick={onSubmit} disabled={disabled}>
-            Continue</button>
-   </div>
-  
-
-      
-
+      <label className="FormLabel" htmlFor="password"></label>
+      <input
+        value={formValues.password}
+        type="text"
+        id="password"
+        className="formInput"
+        placeholder="password"
+        name="password"
+        onChange={onInputChange}
+      />
+      <div className="FormFarm">
+        <button onClick={onSubmit} disabled={disabled}>
+          Continue
+        </button>
+        <pre>{JSON.stringify(post, null, 2)}</pre>
+      </div>
     </form>
   );
 }

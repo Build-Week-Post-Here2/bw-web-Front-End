@@ -7,17 +7,20 @@ import Register from "./components/Register";
 function App() {
   
   return (
+    
     <Router>
       <div className="App">
       <div className="Side">
-      {/* <img src={Super}  alt="Superreddit" /> */}
+      <Image></Image>
       </div>
         <Switch>
         {/* <Route path="/Home" component={Home} /> */}
+        <Route path ="/" component={Login} />
             <Route path="/Login" component={Login} />
           <Route path="/Register" component={Register} />
         </Switch>
       </div>
+   
     </Router>
   );
 }
