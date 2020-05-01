@@ -86,7 +86,7 @@ button {
   font-size: .8em;
   font-weight: 500;
 }
-&:disabled {
+:disabled {
   color: white;
   background-color: orange;
 }

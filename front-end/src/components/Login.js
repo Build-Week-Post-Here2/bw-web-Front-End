@@ -38,7 +38,7 @@ const formSchema = Yup.object().shape({
 });
 
 export default function Login(props) {
-const {onSubmit, disabled,} = props
+const {onSubmit, disabled, signIn} = props
   //Sets state prop for `users`
 
 
@@ -122,7 +122,7 @@ const {onSubmit, disabled,} = props
             onChange={onInputChange}
           />
  <div className="FormFarm">
-          <button  onClick={onSubmit} disabled={disabled}>
+          <button  onClick={signIn} disabled={disabled}>
             Continue</button>
    </div>
   
