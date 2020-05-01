@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import * as yup from "yup";
 
+
 const url = "https://post-here-subreddit.herokuapp.com/api/auth/register";
 
 const initialFormValues = {
@@ -75,6 +76,7 @@ export default function Register(props) {
 
     postUser(newUser);
     setFormValues(initialFormValues);
+    
   };
 
   const onInputChange = (evt) => {

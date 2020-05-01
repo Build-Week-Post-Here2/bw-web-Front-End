@@ -2,11 +2,9 @@ import React, { useState, useEffect } from 'react'
 import { axiosWithAuth } from '../utils/axiosWithAuth'
 import styled from 'styled-components'
 import {useHistory} from 'react-router-dom'
-import EditPost from './EditPost'
-import Popup from 'reactjs-popup'
 
 // styled components
-const Body = styled.input `
+const Body = styled.textarea `
 width: 55%;
 height: 10vh;
 border-radius: 5px;
